@@ -12,6 +12,10 @@ let
   isDirWithDefault = name: type: dir:
     type == "directory" && builtins.pathExists (dir + "/${name}/default.nix");
 
+  # Check if an entry is a directory containing template.nix
+  isDirWithTemplate = name: type: dir:
+    type == "directory" && builtins.pathExists (dir + "/${name}/template.nix");
+
   # Read a directory safely; return empty set if it does not exist
   files = dir:
     if builtins.pathExists dir
@@ -136,11 +140,11 @@ let
   # This modification allows buildFn to be aware of the specific entry it is
   # processing, e.g., hostnames, usernames, or package names.
   # ------------------------------------------------------------------------
-  wireGeneric = { dir, buildFn }:
+  wireGeneric = { dir, buildFn, isDirAccepted ? isDirWithDefault }:
     let fs = filterPreferDir dir (files dir); in
     lib.foldlAttrs
       (acc: name: type:
-        if isDirWithDefault name type dir then
+        if isDirAccepted name type dir then
           acc // { ${name} = buildFn (dir + "/" + name) name; }
         else if isNixFile name type then
           acc // { ${stripNix name} = buildFn (dir + "/" + name) (stripNix name); }
@@ -218,6 +222,36 @@ let
     };
 
   # ------------------------------------------------------------------------
+  # wireTemplates: Collect flake templates from a directory
+  # Each subdirectory becomes a template available via `nix flake init -t .#<name>`
+  #
+  # Parameters:
+  #   - dir: directory containing template directories
+  #
+  # Each template directory can optionally contain a `template.nix` file
+  # with { description = "..."; } for the template description.
+  # If no template.nix exists, the directory name is used as description.
+  # ------------------------------------------------------------------------
+  wireTemplates = { dir }:
+    wireGeneric {
+      inherit dir;
+      # Accept any directory as a template — template.nix is optional metadata only
+      isDirAccepted = name: type: _dir: type == "directory";
+      buildFn = path: name:
+        let
+          metaFile = path + "/template.nix";
+          meta =
+            if builtins.pathExists metaFile
+            then import metaFile
+            else { description = "${name} template"; };
+        in
+        {
+          path = path;
+          inherit (meta) description;
+        };
+    };
+
+  # ------------------------------------------------------------------------
   # mkDarwinConfigs: Collect Darwin host configurations
   # Uses wireGeneric and wraps each config with nix-darwin.lib.darwinSystem
   # ------------------------------------------------------------------------
@@ -248,6 +282,31 @@ let
       buildFn = path: name: inputs.nixpkgs.lib.nixosSystem {
         specialArgs = commonSpecialArgs;
         modules = (commonModules "nixos" home path dir name) ++ [
+          { networking.hostName = lib.mkDefault name; }
+        ];
+      };
+    };
+
+  # ------------------------------------------------------------------------
+  # mkIsoConfigs: Collect NixOS ISO configurations
+  # Works like mkNixosConfigs but auto-imports the installation-cd-minimal profile,
+  # so ISO hosts get the same home-manager wiring as regular NixOS hosts.
+  #
+  # Parameters:
+  #   - dir: directory containing ISO host configs
+  #   - home: boolean, whether to include home-manager modules
+  #   - installerModule: which installer profile to import
+  #     (default: "installation-cd-minimal.nix")
+  # ------------------------------------------------------------------------
+  mkIsoConfigs = { dir, home ? true, installerModule ? "installation-cd-minimal.nix" }:
+    wireGeneric {
+      inherit dir;
+      buildFn = path: name: inputs.nixpkgs.lib.nixosSystem {
+        specialArgs = commonSpecialArgs;
+        modules = (commonModules "nixos" home path dir name) ++ [
+          ({ modulesPath, ... }: {
+            imports = [ "${modulesPath}/installer/cd-dvd/${installerModule}" ];
+          })
           { networking.hostName = lib.mkDefault name; }
         ];
       };
@@ -288,5 +347,5 @@ let
 
 in
 {
-  inherit wirePackages mkDarwinConfigs mkNixosConfigs mkHomeConfigs wireModules wireOverlays;
+  inherit wirePackages mkDarwinConfigs mkNixosConfigs mkIsoConfigs mkHomeConfigs wireModules wireOverlays wireTemplates;
 }

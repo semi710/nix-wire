@@ -4,6 +4,8 @@
 , packages ? "packages" # name of dir for the packages
 , devShells ? "devShells" # name of dir for the devShells
 , hosts ? "hosts" # name of dir for the host configs
+, iso ? "${hosts}/iso" # name of dir for the ISO configs
+, templates ? "templates" # name of dir for the flake templates
 , home ? true
 , imports ? [ ]
 , ...
@@ -36,6 +38,11 @@ flake-parts.lib.mkFlake
       dir = "${prefix}/${hosts}/nixos";
     };
 
+    isoConfigurations = utils.mkIsoConfigs {
+      inherit home;
+      dir = "${prefix}/${iso}";
+    };
+
     darwinModules = utils.wireModules {
       dir = "${prefix}/modules/darwin";
     };
@@ -54,6 +61,10 @@ flake-parts.lib.mkFlake
 
     overlays = utils.wireOverlays {
       dir = "${prefix}/overlays";
+    };
+
+    templates = utils.wireTemplates {
+      dir = "${prefix}/${templates}";
     };
   };
   perSystem = { pkgs, system, ... }: {
