@@ -9,7 +9,7 @@ It discovers and assembles configurations for:
 |---|---|---|
 | `hosts/nixos/` | `nixosConfigurations` | NixOS host systems |
 | `hosts/darwin/` | `darwinConfigurations` | macOS (nix-darwin) host systems |
-| `hosts/iso/` | `isoConfigurations` | NixOS ISO images (installer/live) |
+| `hosts/iso/` | `packages.<system>.<name>` | NixOS ISO images (arch-aware, installer/live) |
 | `hosts/home/` | `legacyPackages.homeConfigurations` | Standalone Home Manager users |
 | `packages/` | `packages` | Custom packages |
 | `devshells/` | `devShells` | Development shells |
@@ -66,7 +66,7 @@ That's it. Drop your configs into the right directories and nix-wire wires them 
 │   │   │   └── default.nix
 │   │   └── office-mac.nix
 │   │
-│   ├── iso/                    # → isoConfigurations
+│   ├── iso/                    # → packages.<system>.<name> (arch-aware ISO)
 │   │   └── rescue/
 │   │       ├── users/
 │   │       │   └── nixos.nix   # Home config for "nixos" user on ISO
@@ -146,7 +146,8 @@ hosts/iso/
 {
   imports = [ inputs.self.nixosModules.default ];
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  # Do NOT set nixpkgs.hostPlatform here — nix-wire derives the platform
+  # from the build system so `nix build .#iso` produces a native-arch ISO.
 
   environment.systemPackages = with pkgs; [ git disko ];
 
@@ -172,19 +173,23 @@ hosts/iso/
 
 ### Building the ISO
 
-The ISO is available as `isoConfigurations.<name>`:
-
-```nix
-# In your flake (e.g. via flake-parts):
-{ self, ... }: {
-  flake.iso = self.isoConfigurations.rescue.config.system.build.isoImage;
-}
-```
-
-Then build with:
+ISO image derivations are available as per-system packages under
+`packages.<system>.<name>`. Nix auto-resolves the bare name to the current
+system's package, so building a native ISO for the machine you're on is simply:
 
 ```bash
-nix build .#iso.iso
+nix build .#rescue
+```
+
+This produces an x86_64 ISO on x86_64-linux and an aarch64 ISO on aarch64-linux.
+(Only Linux systems are supported — Darwin builds are skipped.)
+
+The full NixOS evaluation is attached as `passthru.config`, so you can also
+inspect any option without a separate flake-level configuration:
+
+```bash
+nix eval .#packages.x86_64-linux.rescue --apply 'x: x.passthru.config.networking.hostName'
+nix eval .#packages.aarch64-linux.rescue --apply 'x: x.passthru.config.services.openssh.enable'
 ```
 
 ### Custom installer profile
@@ -197,7 +202,7 @@ inputs.nix-wire.mkFlake {
   inherit inputs;
   iso = "hosts/iso";
   # Use the graphical installer profile instead
-  # installerModule is currently a global setting in mkIsoConfigs
+  # installerModule is currently a global setting in mkIsoPackages
 }
 ```
 

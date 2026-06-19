@@ -38,11 +38,6 @@ flake-parts.lib.mkFlake
       dir = "${prefix}/${hosts}/nixos";
     };
 
-    isoConfigurations = utils.mkIsoConfigs {
-      inherit home;
-      dir = "${prefix}/${iso}";
-    };
-
     darwinModules = utils.wireModules {
       dir = "${prefix}/modules/darwin";
     };
@@ -74,9 +69,13 @@ flake-parts.lib.mkFlake
       config.allowUnfree = true;
       overlays = lib.attrValues inputs.self.overlays;
     };
-    packages = utils.wirePackages {
-      inherit pkgs;
-      dir = "${prefix}/${packages}";
+    packages = utils.wirePackages
+      {
+        inherit pkgs;
+        dir = "${prefix}/${packages}";
+      } // utils.mkIsoPackages {
+      inherit home system;
+      dir = "${prefix}/${iso}";
     };
     devShells = utils.wirePackages {
       inherit pkgs;

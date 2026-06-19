@@ -288,29 +288,49 @@ let
     };
 
   # ------------------------------------------------------------------------
-  # mkIsoConfigs: Collect NixOS ISO configurations
-  # Works like mkNixosConfigs but auto-imports the installation-cd-minimal profile,
-  # so ISO hosts get the same home-manager wiring as regular NixOS hosts.
-  #
-  # Parameters:
-  #   - dir: directory containing ISO host configs
-  #   - home: boolean, whether to include home-manager modules
-  #   - installerModule: which installer profile to import
-  #     (default: "installation-cd-minimal.nix")
+  # isoModules: Shared module list for ISO hosts.
+  # Used by mkIsoPackages to assemble the nixosSystem modules (DRY).
   # ------------------------------------------------------------------------
-  mkIsoConfigs = { dir, home ? true, installerModule ? "installation-cd-minimal.nix" }:
-    wireGeneric {
-      inherit dir;
-      buildFn = path: name: inputs.nixpkgs.lib.nixosSystem {
-        specialArgs = commonSpecialArgs;
-        modules = (commonModules "nixos" home path dir name) ++ [
-          ({ modulesPath, ... }: {
-            imports = [ "${modulesPath}/installer/cd-dvd/${installerModule}" ];
-          })
-          { networking.hostName = lib.mkDefault name; }
-        ];
-      };
-    };
+  isoModules = home: path: dir: name: installerModule:
+    (commonModules "nixos" home path dir name) ++ [
+      ({ modulesPath, ... }: {
+        imports = [ "${modulesPath}/installer/cd-dvd/${installerModule}" ];
+      })
+      { networking.hostName = lib.mkDefault name; }
+    ];
+
+  # ------------------------------------------------------------------------
+  # mkIsoPackages: Build ISO image derivations per-system (arch-aware)
+  #
+  # Returns the actual .iso image derivations scoped to each system's
+  # architecture via perSystem. This lets `nix build .#<name>` produce a
+  # native ISO for the build machine's current architecture.
+  #
+  # The full NixOS evaluation is attached as `passthru.config` so the package
+  # is BOTH buildable (`nix build .#iso`) AND inspectable
+  # (`nix eval .#packages.<system>.iso.passthru.config.<option>`).
+  # This removes the need for a separate flake-level isoConfigurations.
+  #
+  # Only evaluates on Linux systems (ISOs are NixOS-specific).
+  # ------------------------------------------------------------------------
+  mkIsoPackages = { dir, home ? true, system, installerModule ? "installation-cd-minimal.nix" }:
+    lib.optionalAttrs (lib.hasSuffix "-linux" system) (
+      wireGeneric {
+        inherit dir;
+        buildFn = path: name:
+          let
+            eval = inputs.nixpkgs.lib.nixosSystem {
+              inherit system;
+              specialArgs = commonSpecialArgs;
+              modules = isoModules home path dir name installerModule;
+            };
+            iso = eval.config.system.build.isoImage;
+          in
+          iso // {
+            passthru = (iso.passthru or { }) // { config = eval.config; };
+          };
+      }
+    );
 
   # ------------------------------------------------------------------------
   # mkHomeConfigs: Collect Home Manager user configurations
@@ -347,5 +367,5 @@ let
 
 in
 {
-  inherit wirePackages mkDarwinConfigs mkNixosConfigs mkIsoConfigs mkHomeConfigs wireModules wireOverlays wireTemplates;
+  inherit wirePackages mkDarwinConfigs mkNixosConfigs mkIsoPackages mkHomeConfigs wireModules wireOverlays wireTemplates;
 }
