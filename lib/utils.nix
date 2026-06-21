@@ -1,6 +1,19 @@
 { inputs, lib ? import <nixpkgs/lib>, ... }:
 
 let
+  # --- pure builtins helpers (work in any evaluation context) ---
+  _attrNames = builtins.attrNames;
+  _filter = builtins.filter;
+  _hasSuffix = suffix: str:
+    let
+      suffixLen = builtins.stringLength suffix;
+      strLen = builtins.stringLength str;
+    in
+    strLen >= suffixLen && builtins.substring (strLen - suffixLen) suffixLen str == suffix;
+  _elem = x: xs: builtins.any (y: y == x) xs;
+  _pathExists = builtins.pathExists;
+  _readDir = builtins.readDir;
+
   # Remove the ".nix" suffix from a filename
   stripNix = name: lib.removeSuffix ".nix" name;
 
@@ -252,6 +265,48 @@ let
     };
 
   # ------------------------------------------------------------------------
+  # autoImport: Import all sibling .nix files and dirs with default.nix
+  #
+  # Pure builtins only — works in any evaluation context (flakes, modules, repl).
+  # Handles both:
+  #   - foo.nix (regular .nix file)
+  #   - bar/    (directory containing default.nix)
+  #
+  # Usage: imports = inputs.nix-wire.lib.autoImport ./.;
+  # ------------------------------------------------------------------------
+  autoImport = dir:
+    let
+      entries = if _pathExists dir then _readDir dir else { };
+      names = _attrNames entries;
+      keep = name:
+        let type = entries.${name};
+        in
+        (type == "regular" && name != "default.nix" && _hasSuffix ".nix" name)
+        || (type == "directory" && _pathExists (dir + "/${name}/default.nix"));
+    in
+    map (name: dir + "/${name}") (_filter keep names);
+
+  # ------------------------------------------------------------------------
+  # autoImportExcept: Import siblings, skipping additional exclusions
+  #
+  # Same as autoImport but also excludes extra files/directories.
+  #
+  # Usage: imports = inputs.nix-wire.lib.autoImportExcept ./. ["combined-system-prompt.nix"];
+  # ------------------------------------------------------------------------
+  autoImportExcept = dir: exclusions:
+    let
+      skip = [ "default.nix" ] ++ exclusions;
+      entries = if _pathExists dir then _readDir dir else { };
+      names = _attrNames entries;
+      keep = name:
+        let type = entries.${name};
+        in
+        (type == "regular" && _hasSuffix ".nix" name && !(_elem name skip))
+        || (type == "directory" && _pathExists (dir + "/${name}/default.nix") && !(_elem name skip));
+    in
+    map (name: dir + "/${name}") (_filter keep names);
+
+  # ------------------------------------------------------------------------
   # mkDarwinConfigs: Collect Darwin host configurations
   # Uses wireGeneric and wraps each config with nix-darwin.lib.darwinSystem
   # ------------------------------------------------------------------------
@@ -367,5 +422,16 @@ let
 
 in
 {
-  inherit wirePackages mkDarwinConfigs mkNixosConfigs mkIsoPackages mkHomeConfigs wireModules wireOverlays wireTemplates;
+  inherit
+    wirePackages
+    mkDarwinConfigs
+    mkNixosConfigs
+    mkIsoPackages
+    mkHomeConfigs
+    wireModules
+    wireOverlays
+    wireTemplates
+    autoImport
+    autoImportExcept
+    ;
 }
