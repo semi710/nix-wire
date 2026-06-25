@@ -1,0 +1,75 @@
+site_name: nix-wire
+site_url: https://nix-wire.semi.sh
+site_description: A lightweight Nix flake auto-wiring library
+site_author: Nikhil Singh
+repo_name: semi710/nix-wire
+repo_url: https://github.com/semi710/nix-wire
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Architecture: architecture.md
+  - API Reference: api.md
+  - Examples: examples.md
+  - Guides:
+      - Adding Hosts: guides/adding-hosts.md
+      - Adding Modules: guides/adding-modules.md
+      - autoImportExcept: guides/autoImportExcept.md
+      - Building ISOs: guides/iso.md
+      - Overlays: guides/overlays.md
+  - Memory:
+      - Context: memory/context.md
+      - Decisions: memory/decisions.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
