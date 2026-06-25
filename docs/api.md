@@ -109,7 +109,7 @@ outputs = inputs: inputs.nix-wire.mkFlake {
 Imports all sibling `.nix` files and directories with `default.nix` from a
 given directory. Returns a **list of paths** suitable for use in `imports`.
 
-Uses **pure builtins only** — works in any evaluation context (flakes,
+Uses **pure builtins only** - works in any evaluation context (flakes,
 modules, repl, `nix eval`).
 
 ### Signature
@@ -318,12 +318,12 @@ An attribute set of NixOS configurations, one per host:
 
 Every host configuration includes:
 
-1. **The host's own config** — the `.nix` file or `default.nix`
-2. **User discovery** — `users.users.<name>` from `users/` subdirectory
-3. **Home Manager** (if `home = true`) — full HM integration with per-user configs
-4. **Common Nix settings** — `allowUnfree`, `experimental-features`, `max-jobs`
-5. **Hostname** — `networking.hostName = mkDefault <hostname>`
-6. **Special args** — `{ inputs, flake }` available in all modules
+1. **The host's own config** - the `.nix` file or `default.nix`
+2. **User discovery** - `users.users.<name>` from `users/` subdirectory
+3. **Home Manager** (if `home = true`) - full HM integration with per-user configs
+4. **Common Nix settings** - `allowUnfree`, `experimental-features`, `max-jobs`
+5. **Hostname** - `networking.hostName = mkDefault <hostname>`
+6. **Special args** - `{ inputs, flake }` available in all modules
 
 ### Example
 
@@ -402,7 +402,7 @@ Same as `mkNixosConfigs` but:
 
 **File:** `lib/utils.nix`
 
-Builds NixOS ISO image derivations as per-system packages. Arch-aware —
+Builds NixOS ISO image derivations as per-system packages. Arch-aware -
 only evaluates on Linux systems.
 
 ### Signature
@@ -475,7 +475,7 @@ profiles from nixpkgs' `modulesPath/installer/cd-dvd/` include:
 
 **File:** `lib/utils.nix`
 
-Scans a directory for standalone Home Manager configurations — users not
+Scans a directory for standalone Home Manager configurations - users not
 tied to a specific host.
 
 ### Signature
@@ -716,7 +716,7 @@ An attribute set of template objects:
 
 ### Template discovery
 
-Uses a custom `isDirAccepted` that accepts **any** directory — no
+Uses a custom `isDirAccepted` that accepts **any** directory - no
 `default.nix` required. Each template directory can optionally contain a
 `template.nix` file with `{ description = "..."; }` for custom metadata.
 
@@ -761,7 +761,7 @@ commonNix = {
 };
 ```
 
-Applied to every NixOS and Darwin host. All values are `mkDefault` —
+Applied to every NixOS and Darwin host. All values are `mkDefault` -
 overridable in host config.
 
 ### commonSpecialArgs

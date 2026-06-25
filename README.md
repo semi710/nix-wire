@@ -2,14 +2,14 @@
 
 **A lightweight Nix flake auto-wiring library.**
 
-Drop your configs into the right directories — nix-wire builds the flake
+Drop your configs into the right directories - nix-wire builds the flake
 outputs for you. No manual imports, no boilerplate, no per-host wiring.
 
 Built on [flake-parts](https://flake.parts/). Used by [ndots](https://github.com/semi710/ndots).
 
 ---
 
-<h3>📚 <a href="https://nix-wire.semi.sh">nix-wire.semi.sh</a> — Full Documentation</h3>
+<h3>📚 <a href="https://nix-wire.semi.sh">nix-wire.semi.sh</a> - Full Documentation</h3>
 
 <sub>API Reference · Architecture · Guides · Convention Rules · ISO · Templates</sub>
 
@@ -40,6 +40,6 @@ That's it. Everything else is discovered from the directory tree.
 
 ## Related
 
-- **[ndots](https://github.com/semi710/ndots)** — NixOS + nix-darwin config built with nix-wire
-- **[utils](https://github.com/semi710/utils)** — Utility scripts flake
-- **[blueprint](https://github.com/numtide/blueprint)** — Similar project (nix-wire is intentionally more minimal)
+- **[ndots](https://github.com/semi710/ndots)** - NixOS + nix-darwin config built with nix-wire
+- **[utils](https://github.com/semi710/utils)** - Utility scripts flake
+- **[blueprint](https://github.com/numtide/blueprint)** - Similar project (nix-wire is intentionally more minimal)

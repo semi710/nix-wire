@@ -23,7 +23,7 @@ Add nix-wire and its dependencies to your `flake.nix`:
 ```
 
 !!! note "Dependencies"
-    - **flake-parts** is required — nix-wire is built on it.
+    - **flake-parts** is required - nix-wire is built on it.
     - **home-manager** is required if `home = true` (the default).
     - **nix-darwin** is required if you have `hosts/darwin/` entries.
 
@@ -94,15 +94,15 @@ nix develop
 
 With just the `mkFlake` call above, nix-wire provides:
 
-- **`nixosConfigurations`** — from `hosts/nixos/`
-- **`darwinConfigurations`** — from `hosts/darwin/`
-- **`packages`** — from `packages/` (via `callPackage`)
-- **`devShells`** — from `devshells/`
-- **`nixosModules`**, **`darwinModules`**, **`homeModules`**, **`flakeModules`** — from `modules/`
-- **`overlays`** — from `overlays/`
-- **`templates`** — from `templates/`
-- **`legacyPackages.homeConfigurations`** — standalone Home Manager from `hosts/home/`
-- **ISO images** — from `hosts/iso/` as per-system packages
+- **`nixosConfigurations`** - from `hosts/nixos/`
+- **`darwinConfigurations`** - from `hosts/darwin/`
+- **`packages`** - from `packages/` (via `callPackage`)
+- **`devShells`** - from `devshells/`
+- **`nixosModules`**, **`darwinModules`**, **`homeModules`**, **`flakeModules`** - from `modules/`
+- **`overlays`** - from `overlays/`
+- **`templates`** - from `templates/`
+- **`legacyPackages.homeConfigurations`** - standalone Home Manager from `hosts/home/`
+- **ISO images** - from `hosts/iso/` as per-system packages
 
 Every host automatically gets:
 
@@ -178,7 +178,7 @@ See the [API reference](api.md#mkflake) for all parameters.
 ## Using autoImport in module files
 
 nix-wire also exports `autoImport` and `autoImportExcept` for use outside
-the main wiring — e.g., in a module file that wants to import its siblings:
+the main wiring - e.g., in a module file that wants to import its siblings:
 
 ```nix
 # modules/nixos/default.nix

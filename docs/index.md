@@ -2,7 +2,7 @@
 
 **A lightweight Nix flake auto-wiring library.**
 
-Drop your configs into the right directories — nix-wire builds the flake
+Drop your configs into the right directories - nix-wire builds the flake
 outputs for you. No manual imports, no boilerplate, no per-host wiring.
 
 ---
@@ -38,7 +38,7 @@ and the library walks the tree and assembles the flake outputs.
 
 !!! note "Design philosophy"
     nix-wire intentionally keeps things **bare minimum**. It wires
-    configurations — it doesn't impose a module system, a secrets framework,
+    configurations - it doesn't impose a module system, a secrets framework,
     or an opinion on how you structure your configs. Similar projects like
     [blueprint](https://github.com/numtide/blueprint) exist; nix-wire focuses
     solely on wiring without additional complexity.
@@ -65,14 +65,14 @@ directory tree.
 
 ## Features
 
-- **Auto-discovery** — hosts, modules, packages, overlays, templates, devshells
-- **Home Manager integration** — per-user configs wired into each host automatically
-- **User discovery** — `users/` subdirectory under each host creates user entries
-- **ISO support** — build bootable NixOS ISOs as per-system packages
-- **Standalone Home Manager** — `hosts/home/` for users not tied to a host
-- **Template support** — `templates/` directory auto-discovered for `nix flake init -t`
-- **Convention over configuration** — sensible defaults, every directory name overridable
-- **Special args** — `inputs` and `flake` (alias for `inputs.self`) passed everywhere
+- **Auto-discovery** - hosts, modules, packages, overlays, templates, devshells
+- **Home Manager integration** - per-user configs wired into each host automatically
+- **User discovery** - `users/` subdirectory under each host creates user entries
+- **ISO support** - build bootable NixOS ISOs as per-system packages
+- **Standalone Home Manager** - `hosts/home/` for users not tied to a host
+- **Template support** - `templates/` directory auto-discovered for `nix flake init -t`
+- **Convention over configuration** - sensible defaults, every directory name overridable
+- **Special args** - `inputs` and `flake` (alias for `inputs.self`) passed everywhere
 
 ## Built on flake-parts
 
@@ -86,12 +86,12 @@ via the `imports` parameter.
 ## Real-world usage
 
 See [ndots](https://github.com/semi710/ndots) for a complete NixOS + nix-darwin
-configuration built with nix-wire — 5 hosts, 11 NixOS modules, shared
+configuration built with nix-wire - 5 hosts, 11 NixOS modules, shared
 workstation configs, Home Manager users, custom packages, and ISO builds. The
 entire `flake.nix` is just `inputs.nix-wire.mkFlake { inherit inputs; }`.
 
 !!! example
     ndots uses nix-wire to auto-discover hosts (`obox`, `semi`, `dsd`, `mach`,
-    `jp-mbp`), modules, packages, and overlays from the directory tree — zero
+    `jp-mbp`), modules, packages, and overlays from the directory tree - zero
     manual wiring. Browse the [repo](https://github.com/semi710/ndots) to see
     the full structure.

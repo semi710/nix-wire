@@ -34,8 +34,8 @@ hosts/nixos/
 
 ## When to use which
 
-- **Flat file** — simple configs with no per-user home configs
-- **Directory** — when you need a `users/` subdirectory for Home Manager
+- **Flat file** - simple configs with no per-user home configs
+- **Directory** - when you need a `users/` subdirectory for Home Manager
 
 ## Per-user Home Manager
 
@@ -52,12 +52,12 @@ hosts/nixos/workstation/
 
 nix-wire automatically:
 
-1. **Creates user entries** — `users.users.alice` and `users.users.bob`
+1. **Creates user entries** - `users.users.alice` and `users.users.bob`
    with default `home` paths (`/home/alice`, `/home/bob`)
-2. **Wires Home Manager** — imports `home-manager.nixosModules.home-manager`
-3. **Sets up per-user configs** — `home-manager.users.alice` imports
+2. **Wires Home Manager** - imports `home-manager.nixosModules.home-manager`
+3. **Sets up per-user configs** - `home-manager.users.alice` imports
    `alice.nix`, `home-manager.users.bob` imports `bob/default.nix`
-4. **Passes special args** — `inputs` and `flake` available in user configs
+4. **Passes special args** - `inputs` and `flake` available in user configs
 
 ### User config example
 

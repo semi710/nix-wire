@@ -11,7 +11,7 @@ point is `mkFlake` (in `lib/default.nix`), which calls
 `flake-parts.lib.mkFlake` with a pre-wired configuration that scans your
 project directories and generates the appropriate flake attributes.
 
-The core engine is the **`wireGeneric`** function (in `lib/utils.nix`) — a
+The core engine is the **`wireGeneric`** function (in `lib/utils.nix`) - a
 generic directory walker that collects `.nix` files and directories with
 `default.nix` into an attribute set. Every auto-wiring function is a
 specialization of `wireGeneric` with a different `buildFn`.
@@ -36,7 +36,7 @@ mkFlake (lib/default.nix)
 
 ---
 
-## wireGeneric — the engine
+## wireGeneric - the engine
 
 ```nix
 wireGeneric = { dir, buildFn, isDirAccepted ? isDirWithDefault }:
@@ -46,7 +46,7 @@ This is the heart of nix-wire. It scans a directory and builds an attribute
 set from what it finds:
 
 1. **Reads the directory** safely (returns `{}` if it doesn't exist)
-2. **Applies the precedence rule** — if both `foo.nix` and `foo/default.nix`
+2. **Applies the precedence rule** - if both `foo.nix` and `foo/default.nix`
    exist, `foo.nix` is filtered out and `foo/default.nix` wins
 3. **Iterates** over every entry:
    - If it's a directory with `default.nix` (or matches `isDirAccepted`):
@@ -57,7 +57,7 @@ set from what it finds:
 
 The `buildFn` receives two arguments: the **path** to the file (or
 `default.nix`) and the **name** (entry name without `.nix`, or directory
-name). This lets each specialization know what it's processing — e.g.,
+name). This lets each specialization know what it's processing - e.g.,
 hostnames, package names, usernames.
 
 ### Precedence: directory over file
@@ -129,15 +129,15 @@ mkIsoPackages = { dir, home ? true, system, installerModule ? "installation-cd-m
 
 Builds ISO image derivations as per-system packages. Key design choices:
 
-1. **Arch-aware** — only evaluates on `-linux` systems (Darwin builds are
+1. **Arch-aware** - only evaluates on `-linux` systems (Darwin builds are
    skipped via `lib.optionalAttrs`)
-2. **Per-system, not flake-level** — ISOs live in `packages.<system>.<name>`,
+2. **Per-system, not flake-level** - ISOs live in `packages.<system>.<name>`,
    not in a separate `isoConfigurations` attribute. This means `nix build .#rescue`
    automatically produces a native-arch ISO for the current machine.
-3. **Inspectable** — the full NixOS evaluation is attached as `passthru.config`,
+3. **Inspectable** - the full NixOS evaluation is attached as `passthru.config`,
    so `nix eval .#packages.x86_64-linux.rescue --apply 'x: x.passthru.config...'`
    works without a separate flake attribute.
-4. **Installer profile** — automatically imports `installation-cd-minimal.nix`
+4. **Installer profile** - automatically imports `installation-cd-minimal.nix`
    from nixpkgs' `modulesPath`, giving you a bootable ISO. Override with
    `installerModule` to use a different profile.
 
@@ -161,7 +161,7 @@ isoModules = home: path: dir: name: installerModule:
 mkHomeConfigs = { dir, pkgs }:
 ```
 
-Scans `hosts/home/` for **standalone** Home Manager configurations — users
+Scans `hosts/home/` for **standalone** Home Manager configurations - users
 not tied to a specific NixOS/Darwin host. Each entry becomes a
 `homeManagerConfiguration` with:
 
@@ -181,7 +181,7 @@ varies by platform).
 wireModules = { dir }:
 ```
 
-The simplest specialization — `buildFn` just returns the path itself. Scans
+The simplest specialization - `buildFn` just returns the path itself. Scans
 `modules/nixos/`, `modules/darwin/`, `modules/home/`, `modules/flake/` and
 maps each entry name to its file path. These become `nixosModules`,
 `darwinModules`, `homeModules`, and `flakeModules` respectively.
@@ -265,8 +265,8 @@ Every host module and Home Manager module receives:
 commonSpecialArgs = { inherit inputs; flake = inputs.self; };
 ```
 
-- **`inputs`** — your full flake inputs attrset
-- **`flake`** — alias for `inputs.self` (so you can write `flake.homeModules.shell`)
+- **`inputs`** - your full flake inputs attrset
+- **`flake`** - alias for `inputs.self` (so you can write `flake.homeModules.shell`)
 
 ---
 
@@ -292,14 +292,14 @@ autoImport = dir:
 autoImportExcept = dir: exclusions:
 ```
 
-These are **pure builtins** utilities — they work in any evaluation context
+These are **pure builtins** utilities - they work in any evaluation context
 (flakes, modules, repl). They return a **list of paths** (not an attrset),
 suitable for use in `imports` lists.
 
-- `autoImport` — imports all sibling `.nix` files and dirs with `default.nix`
+- `autoImport` - imports all sibling `.nix` files and dirs with `default.nix`
   (skips `default.nix` itself)
-- `autoImportExcept` — same, but also skips names in the exclusions list
+- `autoImportExcept` - same, but also skips names in the exclusions list
 
 These are exported from the flake as `inputs.nix-wire.lib.autoImport` and
 `inputs.nix-wire.lib.autoImportExcept` for use **outside** of the `mkFlake`
-wiring — e.g., in module files where you want to auto-import siblings.
+wiring - e.g., in module files where you want to auto-import siblings.

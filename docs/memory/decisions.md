@@ -9,7 +9,7 @@ new decisions.
 
 **Why:** flake-parts provides `perSystem` evaluation, module merging, and a
 clean extension model. nix-wire is a thin wrapper that pre-wires the
-auto-discovery — users still get all of flake-parts' features (additional
+auto-discovery - users still get all of flake-parts' features (additional
 modules via `imports`, perSystem, etc.).
 
 ## wireGeneric as the single engine
@@ -53,7 +53,7 @@ attribute, eliminating redundancy.
 functions, not `nixpkgs.lib`.
 
 **Why:** These are exported as `inputs.nix-wire.lib.*` for use in any
-evaluation context — inside module files, in `nix repl`, with `nix eval
+evaluation context - inside module files, in `nix repl`, with `nix eval
 --impure`. They don't depend on nixpkgs being available in the evaluator.
 `wireGeneric` (internal) does use `nixpkgs.lib` because it always runs
 inside `mkFlake` where nixpkgs is available.
@@ -91,9 +91,9 @@ discovery for `users.users`.
 ## Templates accept any directory
 
 **Decision:** `wireTemplates` uses a custom `isDirAccepted` that accepts
-any directory — no `default.nix` or `.nix` file required inside.
+any directory - no `default.nix` or `.nix` file required inside.
 
-**Why:** Flake templates are project scaffolds — they contain arbitrary
+**Why:** Flake templates are project scaffolds - they contain arbitrary
 files (`.envrc`, `flake.nix`, `.gitignore`, README, etc.), not Nix
 modules. Requiring `default.nix` would be wrong. An optional `template.nix`
 provides metadata (description) if desired.

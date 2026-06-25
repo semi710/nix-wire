@@ -22,7 +22,7 @@ attribute.
 
 ## File styles
 
-Same convention as hosts — flat file or directory:
+Same convention as hosts - flat file or directory:
 
 ```text
 modules/nixos/
@@ -43,7 +43,7 @@ wireModules = { dir }:
   };
 ```
 
-The simplest specialization — `buildFn` just returns the path. The result
+The simplest specialization - `buildFn` just returns the path. The result
 is an attrset mapping names to paths:
 
 ```nix
@@ -171,7 +171,7 @@ call. Use for flake-level configuration (pre-commit, treefmt, CI, etc.).
 
 ## Custom module directory
 
-There's no parameter to change the `modules/` directory name — it's
+There's no parameter to change the `modules/` directory name - it's
 hardcoded as `${prefix}/modules/<type>/`. But you can change `prefix`:
 
 ```nix

@@ -6,7 +6,7 @@ How overlays work with nix-wire.
 
 ## Directory layout
 
-Overlays live under `overlays/` (hardcoded path — not configurable via
+Overlays live under `overlays/` (hardcoded path - not configurable via
 `mkFlake` parameters, but affected by `prefix`):
 
 ```text
@@ -17,7 +17,7 @@ overlays/
     └── default.nix        # → overlays.fonts
 ```
 
-Same file conventions as everything else — flat `.nix` file or directory
+Same file conventions as everything else - flat `.nix` file or directory
 with `default.nix`.
 
 ## How wireOverlays works

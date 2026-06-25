@@ -12,7 +12,7 @@ nix-wire treats ISOs as a special category of NixOS host. They live in
 `nixosConfigurations`). This means:
 
 - `nix build .#rescue` produces a native-arch ISO for your current machine
-- The ISO derivation is a regular package — works with `nix build`, CI, caches
+- The ISO derivation is a regular package - works with `nix build`, CI, caches
 - The full NixOS config is inspectable via `passthru.config`
 
 ## Directory structure
@@ -53,7 +53,7 @@ installer profile:
 {
   imports = [ inputs.self.nixosModules.default ];
 
-  # Do NOT set nixpkgs.hostPlatform here — nix-wire derives the platform
+  # Do NOT set nixpkgs.hostPlatform here - nix-wire derives the platform
   # from the build system so `nix build .#iso` produces a native-arch ISO.
 
   environment.systemPackages = with pkgs; [ git disko ];
@@ -189,7 +189,7 @@ isoModules = home: path: dir: name: installerModule:
   ];
 ```
 
-This is DRY — it reuses `commonModules` (the same module list as regular
+This is DRY - it reuses `commonModules` (the same module list as regular
 NixOS hosts) and adds the installer profile import on top.
 
 ---

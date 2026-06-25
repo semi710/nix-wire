@@ -240,7 +240,7 @@ extra arguments before `final: prev:`. It's automatically applied to all
 
 ## Modules
 
-All four module types work identically — the file is collected and its path
+All four module types work identically - the file is collected and its path
 is exposed as a flake attribute.
 
 ```nix
