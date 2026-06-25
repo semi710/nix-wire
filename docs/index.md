@@ -80,3 +80,18 @@ nix-wire uses [flake-parts](https://flake.parts/) under the hood. The `mkFlake`
 function is a thin wrapper around `flake-parts.lib.mkFlake` that pre-wires all
 the auto-discovery logic. You can still pass additional flake-parts modules
 via the `imports` parameter.
+
+---
+
+## Real-world usage
+
+See [ndots](https://github.com/semi710/ndots) for a complete NixOS + nix-darwin
+configuration built with nix-wire — 5 hosts, 11 NixOS modules, shared
+workstation configs, Home Manager users, custom packages, and ISO builds. The
+entire `flake.nix` is just `inputs.nix-wire.mkFlake { inherit inputs; }`.
+
+!!! example
+    ndots uses nix-wire to auto-discover hosts (`obox`, `semi`, `dsd`, `mach`,
+    `jp-mbp`), modules, packages, and overlays from the directory tree — zero
+    manual wiring. Browse the [repo](https://github.com/semi710/ndots) to see
+    the full structure.

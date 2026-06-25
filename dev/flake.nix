@@ -16,6 +16,7 @@
         name = "nix-wire";
         meta.description = "Dev environment for nix-wire";
         inputsFrom = [ config.pre-commit.devShell ];
+        packages = [ pkgs.just ];
         shellHook = ''
           echo 1>&2 "🐼: $(id -un) | 🧬: $(nix eval --raw --impure --expr 'builtins.currentSystem') | 🐧: $(uname -r) "
           echo 1>&2 "Ready to work on nix-wire!"
