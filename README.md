@@ -13,6 +13,8 @@ Built on [flake-parts](https://flake.parts/). Used by [ndots](https://github.com
 
 <sub>API Reference · Architecture · Guides · Convention Rules · ISO · Templates</sub>
 
+![GitHub stars](https://img.shields.io/github/stars/semi710/nix-wire) ![GitHub forks](https://img.shields.io/github/forks/semi710/nix-wire) ![GitHub last commit](https://img.shields.io/github/last-commit/semi710/nix-wire) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
 ---
 
 ## Quick start
