@@ -9,11 +9,10 @@ Built on [flake-parts](https://flake.parts/). Used by [ndots](https://github.com
 
 ---
 
-<h3>📚 <a href="https://nix-wire.semi.sh">nix-wire.semi.sh</a> - Full Documentation</h3>
-
-<sub>API Reference · Architecture · Guides · Convention Rules · ISO · Templates</sub>
-
 ![GitHub stars](https://img.shields.io/github/stars/semi710/nix-wire) ![GitHub forks](https://img.shields.io/github/forks/semi710/nix-wire) ![GitHub last commit](https://img.shields.io/github/last-commit/semi710/nix-wire) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
+<h3>📚 <a href="https://nix-wire.semi.sh">nix-wire.semi.sh</a> - Full Documentation</h3>
+<sub>API Reference · Architecture · Guides · Convention Rules · ISO · Templates</sub>
 
 ---
 
