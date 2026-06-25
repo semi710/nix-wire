@@ -85,7 +85,7 @@ via the `imports` parameter.
 
 ## Real-world usage
 
-See [ndots](https://github.com/semi710/ndots) for a complete NixOS + nix-darwin
+See [ndots](https://ndots.semi.sh) <a href="https://github.com/semi710/ndots" target="_blank">:fontawesome-brands-github:</a> for a complete NixOS + nix-darwin
 configuration built with nix-wire - 5 hosts, 11 NixOS modules, shared
 workstation configs, Home Manager users, custom packages, and ISO builds. The
 entire `flake.nix` is just `inputs.nix-wire.mkFlake { inherit inputs; }`.
@@ -93,5 +93,6 @@ entire `flake.nix` is just `inputs.nix-wire.mkFlake { inherit inputs; }`.
 !!! example
     ndots uses nix-wire to auto-discover hosts (`obox`, `semi`, `dsd`, `mach`,
     `jp-mbp`), modules, packages, and overlays from the directory tree - zero
-    manual wiring. Browse the [repo](https://github.com/semi710/ndots) to see
+    manual wiring. Browse the
+    [repo](https://github.com/semi710/ndots) to see
     the full structure.
