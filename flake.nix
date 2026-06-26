@@ -15,5 +15,18 @@
       {
         inherit (utils) autoImport autoImportExcept;
       };
+    apps = nixpkgs.lib.genAttrs [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ]
+      (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in {
+          docs = {
+            type = "app";
+            program = "${pkgs.python3.withPackages (ps: with ps; [ mkdocs mkdocs-material ])}/bin/mkdocs";
+          };
+        });
   };
 }

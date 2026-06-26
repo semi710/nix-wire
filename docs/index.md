@@ -96,3 +96,11 @@ entire `flake.nix` is just `inputs.nix-wire.mkFlake { inherit inputs; }`.
     manual wiring. Browse the
     [repo](https://github.com/semi710/ndots) to see
     the full structure.
+
+## Docs
+
+Docs are served at [nix-wire.semi.sh](https://nix-wire.semi.sh). To preview locally:
+
+```bash
+just doc
+```

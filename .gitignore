@@ -1,3 +1,6 @@
 .direnv
 .direnv/bin
 .pre-commit-config.yaml
+
+# Mkdocs build output
+/site
