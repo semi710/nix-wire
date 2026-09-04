@@ -88,7 +88,7 @@ let
         home-manager.users = getUsersHome dir hostname;
         home-manager.sharedModules = [
           {
-            home.sessionPath = lib.mkIf pkgs.stdenv.isDarwin [
+            home.sessionPath = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
               "/etc/profiles/per-user/$USER/bin" # To access home-manager binaries
               "/nix/var/nix/profiles/system/sw/bin" # To access nix-darwin binaries
               "/usr/local/bin" # Some macOS GUI programs install here
@@ -204,7 +204,7 @@ let
   getUsers = hostDir: hostname: pkgs:
     mkUsers hostDir hostname (_path: username: {
       home = lib.mkDefault
-        "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${username}";
+        "/${if pkgs.stdenv.hostPlatform.isDarwin then "Users" else "home"}/${username}";
     });
 
   # Create Home Manager user configurations
@@ -412,7 +412,7 @@ let
             {
               home = {
                 username = username;
-                homeDirectory = "/${if pkgs.stdenv.isDarwin then "Users" else "home"}/${username}";
+                homeDirectory = "/${if pkgs.stdenv.hostPlatform.isDarwin then "Users" else "home"}/${username}";
               };
               nix.package = lib.mkDefault pkgs.nix;
             }
